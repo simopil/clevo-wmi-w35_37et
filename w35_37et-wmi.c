@@ -88,7 +88,10 @@ int fanspeed_read(struct seq_file *m, void *v)
     ec_read(209, &fan_data[1]);
     sprintf(rawdata, "%x%x", fan_data[0], fan_data[1]);
     if(kstrtol(rawdata, 16, &rpms)) return -EFAULT;
-    seq_printf(m, "%ld\n", FAN_SPEED_MAGIC_NUMBER/rpms);
+    if(rpms == 0)
+        seq_printf(m, "0\n");
+    else
+        seq_printf(m, "%ld\n", FAN_SPEED_MAGIC_NUMBER/rpms);
     return 0;
 }
 
